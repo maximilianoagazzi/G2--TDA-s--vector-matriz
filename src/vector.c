@@ -1,4 +1,5 @@
 #include <stdlib.h>
+#define VECTOR_H_EXPORT
 #include "vector.h"
 
 typedef struct vector {
