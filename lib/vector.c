@@ -1,0 +1,154 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "vector.h"
+
+typedef struct vector {
+    void** data; // Puntero a un array de punteros a void
+    int size;    // Número actual de elementos en el vector
+    int capacity; // Capacidad máxima del vector
+} vector;
+
+vector* vector_new()
+{
+    vector *v = (vector *)malloc(sizeof(vector));
+    if (v == NULL) {
+        return NULL;
+    }
+    v->capacity = 4; // Tamaño inicial por defecto
+    v->size = 0;
+    v->data = (void **)malloc(v->capacity * sizeof(void *));
+    if (v->data == NULL) {
+        free(v);
+        return NULL;
+    }
+    return v;
+}
+
+vector* vector_new_with(int ini_size)
+{
+    vector *v = (vector *)malloc(sizeof(vector));
+    if (v == NULL) {
+        return NULL;
+    }
+    if (ini_size <= 0) {
+        return NULL;
+    }
+    v->capacity = ini_size;
+    v->size = 0;
+    v->data = (void **)malloc(v->capacity * sizeof(void *));
+    if (v->data == NULL) {
+        free(v);
+        return NULL;
+    }
+    return v;
+}
+
+void vector_free(vector* v)
+{
+    if (v != NULL) {
+        free(v->data);
+        free(v);
+    }
+    return;
+}
+
+int vector_size(vector* v)
+{
+    if (v != NULL) {
+        return v->size;
+    }
+    return -1; // Indica error
+}
+
+int vector_isfull(vector* v)
+{
+    if (v != NULL) {
+        if (v->size >= v->capacity) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    return -1; // Indica error
+}
+
+int vector_isempty(vector* v)
+{
+    if (v != NULL) {
+        if(v->size == 0) {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+    return -1; // Indica error
+}
+
+void* vector_get(vector* v, int index)
+{
+    if (v != NULL && index >= 0 && index < v->size) {
+        return v->data[index];
+    }
+    return NULL; // Indica error
+}
+
+void* vector_set(vector* v, int index, void* value)
+{
+    if (v != NULL && index >= 0 && index < v->size) {
+        void *old_value = v->data[index];
+        v->data[index] = value;
+        return old_value;
+    }
+    return NULL; // Indica error
+}
+
+int vector_add(vector* v, void* value)
+{
+    if (v == NULL) {
+        return -1; // Indica error
+    }
+    if (v->size >= v->capacity) {
+        v->capacity *= 2;
+        void **new_data = (void **)realloc(v->data, v->capacity * sizeof(void *));
+        if (new_data == NULL) {
+            return -1; // Indica error
+        }
+        v->data = new_data;
+    }
+    v->data[v->size++] = value;
+    return 0; // Éxito
+}
+
+int vector_insert(vector* v, int index, void* value)
+{
+    if (v == NULL || index < 0 || index > v->size) {
+        return -1; // Indica error
+    }
+    if (v->size >= v->capacity) {
+        v->capacity *= 2;
+        void **new_data = (void **)realloc(v->data, v->capacity * sizeof(void *));
+        if (new_data == NULL) {
+            return -1; // Indica error
+        }
+        v->data = new_data;
+    }
+    for (int i = v->size; i>index; i--) {
+        v->data[i] = v->data[i-1];
+    }
+    v->data[index] = value;
+    v->size++;
+    return 0; // Éxito
+}
+
+void* vector_remove(vector* v, int index)
+{
+    if (v == NULL || index < 0 || index > v->size) {
+        return NULL; // Indica error
+    }
+    void *removed_value = v->data[index];
+    for (int i = index; i<v->size-1; i++) {
+        v->data[i] = v->data[i+1];
+    }
+    v->size--;
+    return removed_value; // Retorna el valor removido
+}
