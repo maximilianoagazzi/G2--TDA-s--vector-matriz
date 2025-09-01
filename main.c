@@ -15,6 +15,12 @@ int main ()
     for (int i=0; i<vector_size(v_frc); i++) {
         fraction_print((fraction*)vector_get(v_frc, i));
     }
+    printf("\n");
+    int *sum = alg_vector(v_int);
+    printf("Suma: %d\n", *sum);
+    vector_free(v_int);
+    vector_free(v_frc);
+    free(sum);
     return 0;
 }
 
@@ -37,4 +43,13 @@ vector* set_random_vector_frc(int size)
         vector_add(v, num);
     }
     return v;
+}
+
+int *alg_vector(vector *v)
+{
+    int *op =(int *)malloc(sizeof(int*));
+    for (int i=0; i<vector_size(v); i++) {
+        *op += *(int*)vector_get(v, i);
+    }
+    return op;
 }
