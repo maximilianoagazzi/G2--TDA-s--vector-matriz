@@ -4,6 +4,8 @@
 #include "include/Fraction.h"
 #include "include/myheader.h"
 
+void *suma_frc(void *a, void *b);
+
 int main () 
 {
     vector* v_int = set_random_vector_int(100);
@@ -16,8 +18,9 @@ int main ()
         fraction_print((fraction*)vector_get(v_frc, i));
     }
     printf("\n");
-    int *sum = alg_vector(v_int);
-    printf("Suma: %d\n", *sum);
+    void *sum = alg_vector(v_frc, suma_frc);
+    printf("Suma de fracciones: ");
+    fraction_print((fraction*)sum);
     vector_free(v_int);
     vector_free(v_frc);
     free(sum);
@@ -45,11 +48,27 @@ vector* set_random_vector_frc(int size)
     return v;
 }
 
-int *alg_vector(vector *v)
+void *alg_vector(vector *v, void *(*alg)(void*, void*))
 {
-    int *op =(int *)malloc(sizeof(int*));
+    void *op = NULL;
     for (int i=0; i<vector_size(v); i++) {
-        *op += *(int*)vector_get(v, i);
+        op = alg(op, vector_get(v, i));
     }
     return op;
+}
+
+void *suma_frc(void *a, void *b)
+{
+    fraction *sum;
+    if (a == NULL) {
+        sum = fraction_new(0, 1);
+    } else {
+        sum = (fraction*)a;
+    }
+    fraction *num = (fraction*)b;
+    fraction *new_sum = fraction_add(sum, num);
+    if (a != NULL) {
+        fraction_destroy(sum);
+    }
+    return (void *)new_sum;
 }

@@ -4,6 +4,6 @@
 
 vector* set_random_vector_int(int size);
 vector* set_random_vector_frc(int size);
-int *alg_vector(vector *v);
+void *alg_vector(vector *v, void * (*alg)(void*, void*));
 
 #endif
