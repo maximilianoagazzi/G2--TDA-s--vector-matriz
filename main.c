@@ -5,43 +5,62 @@
 #include "include/Fraction.h"
 #include "include/myheader.h"
 
-void *valor_min_or_max(vector *v, int (*cmp)(void*, void*), char *type);
+vector *ordenar_vector(vector *v, int (*ord)(void *, void *));
+int compare_frc(void *a, void *b);
 
 int main () 
 {
     vector* v_int = set_random_vector_int(100);
+    printf("El vector de enteros es: \n\n");
     for (int i=0; i<vector_size(v_int); i++) {
         printf("%d ", *(int*)vector_get(v_int, i));
     }
     printf("\n");
+    //Ejercicio 2
+
     vector* v_frc = set_random_vector_frc(100);
+    printf("\nEl vector de fracciones es: \n\n");
     for (int i=0; i<vector_size(v_frc); i++) {
         fraction_print((fraction*)vector_get(v_frc, i));
     }  //Hasta acá se crean los vectores int y fraction y se imprimen
-
-    printf("\n");
-    int val = 41;
-    int cant = busc_valor(v_int, &val, compare_int);
-    printf("El valor %d se encuentra %d veces en el vector de enteros\n\n", val, cant);  //Esta fragmento busca las apariciones de un valor en el vector
+    //Ejercicio 3
 
     vector* v_frc_sum = sum_vector(v_frc, v_frc, sum_frc);
+    printf("\nEl vector de suma de dos vectores fracciones es: \n\n");
     for (int i=0; i<vector_size(v_frc_sum); i++) {
         fraction_print((fraction*)vector_get(v_frc_sum, i));
     }  //Este es el fragmento de suma de vectores
+    //Ejercicio 5
 
-    printf("\n");
     void *min_int = valor_min_or_max(v_int, compare_int, "min");
-    printf("El valor minimo del vector de enteros es: %d\n", *(int*)min_int); //Valor mínimo del vector de enteros
+    printf("\nEl valor minimo del vector de enteros es: %d\n", *(int*)min_int); //Valor mínimo del vector de enteros
     void *max_int = valor_min_or_max(v_int, compare_int, "max");
     printf("El valor maximo del vector de enteros es: %d\n", *(int*)max_int); //Valor máximo del vector de enteros
+    //Ejercicio 6
 
+    int val = 41;
+    int cant = busc_valor(v_int, &val, compare_int);
+    printf("\nEl valor %d se encuentra %d veces en el vector de enteros\n", val, cant);  //Esta fragmento busca las apariciones de un valor en el vector
+    //Ejercicio 7
+
+    printf("\nEl valor maximo del vector de enteros se repite: %d veces\n", valor_max_1rec(v_int, compare_int)); //lo recorre 1 vez 
+    //Ejercicio 8
+
+    vector *result = ordenar_vector(v_frc, compare_frc);
+    printf("\nEl vector de fracciones ordenado es: \n\n");
+    for (int i=0; i<vector_size(result); i++) {
+        fraction_print((fraction*)vector_get(result, i));
+    }
+    //Ejercicio 9
+
+    vector_free(result);
     vector_free(v_frc_sum);
     vector_free(v_int);
     vector_free(v_frc);  //Liberar memoria
     return 0;
 }
 
-vector* set_random_vector_int(int size)
+vector* set_random_vector_int(int size)  //Ejercicio 2
 {
     vector *v = vector_new_with(size);
     for (int i=0; i<size; i++) {
@@ -52,7 +71,7 @@ vector* set_random_vector_int(int size)
     return v;
 }
 
-vector* set_random_vector_frc(int size)
+vector* set_random_vector_frc(int size) //Ejercicio 3
 {
     vector *v = vector_new_with(size);
     for (int i=0; i<size; i++) {
@@ -62,24 +81,7 @@ vector* set_random_vector_frc(int size)
     return v;
 }
 
-int busc_valor(vector *v, void *val, int (*cmp)(void *, void *))
-{
-    int cant = 0;
-    for(int i=0; i<vector_size(v); i++) {
-        if(cmp(vector_get(v, i), val) == 0) {
-            cant++;
-        }
-    }
-    return cant;
-}
-
-int compare_int(void *a, void *b) {
-    int vec = *(int*)a;
-    int val = *(int*)b;
-    return (vec - val);
-}
-
-vector* sum_vector(vector *v1, vector *v2, void* (*sum)(void*, void*))
+vector* sum_vector(vector *v1, vector *v2, void* (*sum)(void*, void*)) //Ejercicio 5
 {
     vector *result;
     if (vector_size(v1) != vector_size(v2)) {
@@ -93,14 +95,14 @@ vector* sum_vector(vector *v1, vector *v2, void* (*sum)(void*, void*))
     return result;
 }
 
-void* sum_frc(void* a, void* b)
+void* sum_frc(void* a, void* b) //Ejercicio 5
 {
     fraction *f1 = (fraction*)a;
     fraction *f2 = (fraction*)b;
     return (void*)fraction_add(f1, f2);
 }
 
-void *valor_min_or_max(vector *v, int (*cmp)(void*, void*), char *type)
+void *valor_min_or_max(vector *v, int (*cmp)(void*, void*), char *type) //Ejercicio 6
 {
     void *valor, *extrm;
     if(vector_size(v) == 0) {
@@ -121,4 +123,70 @@ void *valor_min_or_max(vector *v, int (*cmp)(void*, void*), char *type)
         }
     }
     return extrm;
+}
+
+int compare_int(void *a, void *b) { //Ejercicio 6
+    int vec = *(int*)a;
+    int val = *(int*)b;
+    return (vec - val);
+}
+
+int busc_valor(vector *v, void *val, int (*cmp)(void *, void *)) //Ejercicio 7
+{
+    int cant = 0;
+    for(int i=0; i<vector_size(v); i++) {
+        if(cmp(vector_get(v, i), val) == 0) {
+            cant++;
+        }
+    }
+    return cant;
+}
+
+int valor_max_1rec(vector *v, int (*cmp)(void*, void*)) //Ejercicio 8
+{
+    void *valor, *extrm;
+    int cnt = 1;
+    if(vector_size(v) == 0) {
+        return -1; // Vector vacío
+    }
+    extrm = vector_get(v, 0);
+    for(int i=1; i<vector_size(v); i++) {
+        valor = vector_get(v, i);
+        if(cmp(valor, extrm) > 0) {
+            extrm = valor;
+            cnt = 1;
+        } else if (cmp(valor, extrm) == 0) {
+            cnt++;
+        }
+    }
+    return cnt;
+}
+
+vector *ordenar_vector(vector *v, int (*ord)(void *, void *)) //Ejercicio 9
+{
+    vector *result = vector_new_with(vector_size(v));
+    char swapped = 1;
+    int size = vector_size(v);
+    void *aux;
+    for (int i=0; i<size; i++) {
+        vector_add(result, vector_get(v, i));
+    }
+    while ((size > 1) && (swapped != 0)) {
+        swapped = 0;
+        for (int i=1; i<size; i++) {
+            if (ord(vector_get(result, i-1), vector_get(result, i)) > 0) {
+                aux = vector_get(result, i-1);
+                vector_set(result, i-1, vector_get(result, i));
+                vector_set(result, i, aux);
+                swapped = 1;
+            }
+        }
+        size--;
+    }
+    return result;
+}
+
+int compare_frc(void *a, void *b) //Ejercicio 9
+{
+    return fraction_cmp((fraction*)a,(fraction*)b);
 }
