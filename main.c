@@ -1,11 +1,11 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "include/vector.h"
 #include "include/Fraction.h"
 #include "include/myheader.h"
 
-vector* sum_vector(vector *v1, vector *v2, void* (*sum)(void*, void*));
-void* sum_frc(void* a, void* b);
+void *valor_min_or_max(vector *v, int (*cmp)(void*, void*), char *type);
 
 int main () 
 {
@@ -28,6 +28,12 @@ int main ()
     for (int i=0; i<vector_size(v_frc_sum); i++) {
         fraction_print((fraction*)vector_get(v_frc_sum, i));
     }  //Este es el fragmento de suma de vectores
+
+    printf("\n");
+    void *min_int = valor_min_or_max(v_int, compare_int, "min");
+    printf("El valor minimo del vector de enteros es: %d\n", *(int*)min_int); //Valor mínimo del vector de enteros
+    void *max_int = valor_min_or_max(v_int, compare_int, "max");
+    printf("El valor maximo del vector de enteros es: %d\n", *(int*)max_int); //Valor máximo del vector de enteros
 
     vector_free(v_frc_sum);
     vector_free(v_int);
@@ -92,4 +98,27 @@ void* sum_frc(void* a, void* b)
     fraction *f1 = (fraction*)a;
     fraction *f2 = (fraction*)b;
     return (void*)fraction_add(f1, f2);
+}
+
+void *valor_min_or_max(vector *v, int (*cmp)(void*, void*), char *type)
+{
+    void *valor, *extrm;
+    if(vector_size(v) == 0) {
+        return NULL; // Vector vacío
+    }
+    extrm = vector_get(v, 0);
+    for(int i=1; i<vector_size(v); i++) {
+        valor = vector_get(v, i);
+        if (strcmp(type, "min") == 0) {
+            if(cmp(valor, extrm) < 0) {
+                extrm = valor;
+            }
+        }
+        if (strcmp(type, "max") == 0) {
+            if(cmp(valor, extrm) > 0) {
+                extrm = valor;
+            }
+        }
+    }
+    return extrm;
 }
