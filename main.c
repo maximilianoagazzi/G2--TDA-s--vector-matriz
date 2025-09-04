@@ -5,9 +5,6 @@
 #include "include/Fraction.h"
 #include "include/myheader.h"
 
-vector *ordenar_vector(vector *v, int (*ord)(void *, void *));
-int compare_frc(void *a, void *b);
-
 int main () 
 {
     vector* v_int = set_random_vector_int(100);
@@ -52,6 +49,10 @@ int main ()
         fraction_print((fraction*)vector_get(result, i));
     }
     //Ejercicio 9
+
+    int pos = primera_aparicion(v_frc, vector_get(v_frc, 0), compare_frc);
+    printf("\nLa primera aparicion es en la posicion: %d\n\n", pos);
+    //Ejercicio 10
 
     vector_free(result);
     vector_free(v_frc_sum);
@@ -190,3 +191,18 @@ int compare_frc(void *a, void *b) //Ejercicio 9
 {
     return fraction_cmp((fraction*)a,(fraction*)b);
 }
+
+int primera_aparicion(vector *v, void *val, int (*cmp)(void *, void *)) //Ejercicio 10
+{
+    int prim = -1;
+    vector *v_orden = ordenar_vector(v, cmp);
+    for(int i=0; i<vector_size(v); i++) {
+        vector_set(v, i, vector_get(v_orden, i));
+        if(vector_get(v, i) == val && prim == -1) {
+            prim = i+1;
+        }
+    }
+    vector_free(v_orden);
+    return prim;
+}
+
