@@ -4,6 +4,7 @@
 
 vector* set_random_vector_int(int size);
 vector* set_random_vector_frc(int size);
-void *alg_vector(vector *v, void * (*alg)(void*, void*));
+int busc_valor(vector *v, void *val, int (*cmp)(void *, void *));
+int compare_int(void *a, void *b);
 
 #endif
