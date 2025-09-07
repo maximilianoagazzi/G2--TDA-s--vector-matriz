@@ -172,3 +172,33 @@ void vector_sort(vector *v, int (*ord)(void *, void *)) //Ordenar vector generic
     }
     return;
 }
+
+int vector_sequential_search(vector *v, void *val, int (*bsq)(void *, void *)) //Ejercicio 13
+{
+    int n = 0;
+    while (n < vector_size(v) && bsq(vector_get(v, n), val) != 0) {
+        n++;
+    }
+    if(n == vector_size(v)) {
+        return -1; // No encontrado
+    }
+    return n+1;
+}
+
+int vector_binary_search(vector *v, void *val, int (*bsq)(void *, void *))
+{
+    int low = 0, high = vector_size(v) - 1;
+    int mid = (low + high)/2;
+    while ((low < high) && (bsq(vector_get(v, mid), val) != 0)) {
+        if(bsq(vector_get(v, mid), val) > 0) {
+            high = mid - 1;
+        } else {
+            low = mid + 1;
+        }
+        mid = (low + high)/2;
+    }
+    if (bsq(vector_get(v, mid), val) != 0) {
+        return -1; // No encontrado
+    }
+    return mid+1;
+}

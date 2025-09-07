@@ -72,6 +72,22 @@ int main ()
     } 
     //Ejercicio 12
 
+    int a = 50;
+    int *valor = &a;
+    int busq = vector_sequential_search(v_int, valor, compare_int);  //Busqueda sequencial de a lo sumo vector_size() para encontrar el valor
+    if (busq != -1) {
+        printf("\n\nEl valor %d se encuentra en la posicion: %d\n", a, busq);
+    } else {
+        printf("\n\nEl valor %d no se encuentra en el vector\n", a);
+    }
+    busq = vector_binary_search(v_int, valor, compare_int);  //Busqueda binaria de a lo sumo log2(vector_size()) para encontrar el valor
+    if (busq != -1) {
+        printf("\nEl valor %d se encuentra en la posicion: %d\n", a, busq);
+    } else {
+        printf("\nEl valor %d no se encuentra en el vector\n", a);
+    }
+    //Ejercicio 13
+
     vector_free(result);
     vector_free(result2);
     vector_free(v_frc_sum);
@@ -264,3 +280,4 @@ vector *ordenar_vector_insertion(vector *v, int (*ord)(void *, void *)) //Ejerci
     vector_insert(result, 0, vector_get(v, 0));
     return result;
 }
+

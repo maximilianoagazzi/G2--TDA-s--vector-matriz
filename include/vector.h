@@ -18,3 +18,5 @@ VECTOR_API int vector_add(vector* v, void* value);// Agregar un elemento al fina
 VECTOR_API int vector_insert(vector* v, int index, void* value); // insertar un elemento
 VECTOR_API void* vector_remove(vector* v, int index); // Remover un elemento
 VECTOR_API void vector_sort(vector *v, int (*ord)(void *, void *)); // Ordenar el vector
+VECTOR_API int vector_sequential_search(vector *v, void *val, int (*bsq)(void *, void *)); // Búsqueda secuencial en el vector
+VECTOR_API int vector_binary_search(vector *v, void *val, int (*bsq)(void *, void *)); // Búsqueda binaria en el vector (debe estar ordenado)
