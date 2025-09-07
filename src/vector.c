@@ -152,3 +152,23 @@ void* vector_remove(vector* v, int index)
     v->size--;
     return removed_value; // Retorna el valor removido
 }
+
+void vector_sort(vector *v, int (*ord)(void *, void *)) //Ordenar vector generico desde TDA vector
+{
+    char swapped = 1;
+    int size = vector_size(v);
+    void *aux;
+    while ((size > 1) && (swapped != 0)) {
+        swapped = 0;
+        for (int i=1; i<size; i++) {
+            if (ord(vector_get(v, i-1), vector_get(v, i)) > 0) {
+                aux = vector_get(v, i-1);
+                vector_set(v, i-1, vector_get(v, i));
+                vector_set(v, i, aux);
+                swapped = 1;
+            }
+        }
+        size--;
+    }
+    return;
+}

@@ -22,6 +22,10 @@ int main ()
     }  //Hasta acá se crean los vectores int y fraction y se imprimen
     //Ejercicio 3
 
+    printf("\nLa suma de todas las fracciones del vector es: \n");
+    fraction_print((fraction*)alg_vector(v_frc, suma_frc));  //Este es el fragmento de suma de fracciones
+    //Ejercicio 4
+
     vector* v_frc_sum = sum_vector(v_frc, v_frc, sum_frc);
     printf("\nEl vector de suma de dos vectores fracciones es: \n\n");
     for (int i=0; i<vector_size(v_frc_sum); i++) {
@@ -43,18 +47,33 @@ int main ()
     printf("\nEl valor maximo del vector de enteros se repite: %d veces\n", valor_max_1rec(v_int, compare_int)); //lo recorre 1 vez 
     //Ejercicio 8
 
-    vector *result = ordenar_vector(v_frc, compare_frc);
-    printf("\nEl vector de fracciones ordenado es: \n\n");
+    vector *result = ordenar_vector_bubble(v_frc, compare_frc);
+    printf("\nEl vector de fracciones ordenado por bubble es: \n\n");
     for (int i=0; i<vector_size(result); i++) {
         fraction_print((fraction*)vector_get(result, i));
     }
     //Ejercicio 9
 
     int pos = primera_aparicion(v_frc, vector_get(v_frc, 0), compare_frc);
-    printf("\nLa primera aparicion es en la posicion: %d\n\n", pos);
+    printf("\nLa primera aparicion es en la posicion: %d\n\n", pos); //La aparicion del elemento elejido en el vector ordenado
     //Ejercicio 10
 
+    vector *result2 = ordenar_vector_insertion(v_frc, compare_frc);
+    printf("\nEl vector de fracciones ordenado por insertion es: \n\n");
+    for (int i=0; i<vector_size(result2); i++) {
+        fraction_print((fraction*)vector_get(result2, i));
+    } 
+    //Ejercicio 11
+
+    vector_sort(v_int, compare_int); //ordena v_int en si mismo
+    printf("\nEl vector de enteros ordenado en si mismo es: \n\n");
+    for (int i=0; i<vector_size(v_int); i++) {
+        printf("%d ", *(int*)vector_get(v_int, i));
+    } 
+    //Ejercicio 12
+
     vector_free(result);
+    vector_free(result2);
     vector_free(v_frc_sum);
     vector_free(v_int);
     vector_free(v_frc);  //Liberar memoria
@@ -80,6 +99,31 @@ vector* set_random_vector_frc(int size) //Ejercicio 3
         vector_add(v, num);
     }
     return v;
+}
+
+void *alg_vector(vector *v, void *(*alg)(void*, void*)) //Ejercicio 4 AUN NO FUNCIONA
+{
+    void *op = NULL;
+    for (int i=0; i<vector_size(v); i++) {
+        op = alg(op, vector_get(v, i));
+    }
+    return op;
+}
+
+void *suma_frc(void *a, void *b) //Ejercicio 4
+{
+    fraction *sum;
+    if (a == NULL) {
+        sum = fraction_new(0, 1);
+    } else {
+        sum = (fraction*)a;
+    }
+    fraction *num = (fraction*)b;
+    sum = fraction_add(sum, num);
+    if (a != NULL) {
+        fraction_destroy((fraction*)a);
+    }
+    return (void *)sum;
 }
 
 vector* sum_vector(vector *v1, vector *v2, void* (*sum)(void*, void*)) //Ejercicio 5
@@ -163,7 +207,7 @@ int valor_max_1rec(vector *v, int (*cmp)(void*, void*)) //Ejercicio 8
     return cnt;
 }
 
-vector *ordenar_vector(vector *v, int (*ord)(void *, void *)) //Ejercicio 9
+vector *ordenar_vector_bubble(vector *v, int (*ord)(void *, void *)) //Ejercicio 9
 {
     vector *result = vector_new_with(vector_size(v));
     char swapped = 1;
@@ -195,7 +239,7 @@ int compare_frc(void *a, void *b) //Ejercicio 9
 int primera_aparicion(vector *v, void *val, int (*cmp)(void *, void *)) //Ejercicio 10
 {
     int prim = -1;
-    vector *v_orden = ordenar_vector(v, cmp);
+    vector *v_orden = ordenar_vector_bubble(v, cmp);
     for(int i=0; i<vector_size(v); i++) {
         vector_set(v, i, vector_get(v_orden, i));
         if(vector_get(v, i) == val && prim == -1) {
@@ -206,3 +250,17 @@ int primera_aparicion(vector *v, void *val, int (*cmp)(void *, void *)) //Ejerci
     return prim;
 }
 
+vector *ordenar_vector_insertion(vector *v, int (*ord)(void *, void *)) //Ejercicio 11
+{
+    vector *result = vector_new_with(vector_size(v));
+    for(int i=1; i<vector_size(v); i++) {
+        void *aux = vector_get(v, i);
+        int pos = 0;
+        while (pos < vector_size(result) && ord(aux, vector_get(result, pos)) > 0) {
+            pos++;
+        }
+        vector_insert(result, pos, aux);
+    }
+    vector_insert(result, 0, vector_get(v, 0));
+    return result;
+}

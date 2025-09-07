@@ -17,3 +17,4 @@ VECTOR_API void* vector_set(vector* v, int index, void* value);// Reemplazar
 VECTOR_API int vector_add(vector* v, void* value);// Agregar un elemento al final
 VECTOR_API int vector_insert(vector* v, int index, void* value); // insertar un elemento
 VECTOR_API void* vector_remove(vector* v, int index); // Remover un elemento
+VECTOR_API void vector_sort(vector *v, int (*ord)(void *, void *)); // Ordenar el vector
