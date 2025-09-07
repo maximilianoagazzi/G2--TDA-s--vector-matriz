@@ -25,7 +25,7 @@ fraction *fraction_new (int num, int den)
 
 void fraction_print (fraction* f)
 {
-    printf("%d/%d\n", (*f).num, (*f).den);
+    printf("%d/%d  ", (*f).num, (*f).den);
 }
 
 void fraction_destroy (fraction* f)

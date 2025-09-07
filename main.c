@@ -22,21 +22,21 @@ int main ()
     }  //Hasta acá se crean los vectores int y fraction y se imprimen
     //Ejercicio 3
 
-    printf("\nLa suma de todas las fracciones del vector es: \n");
+    printf("\n\nLa suma de todas las fracciones del vector es: \n");
     fraction_print((fraction*)alg_vector(v_frc, suma_frc));  //Este es el fragmento de suma de fracciones
     //Ejercicio 4
 
     vector* v_frc_sum = sum_vector(v_frc, v_frc, sum_frc);
-    printf("\nEl vector de suma de dos vectores fracciones es: \n\n");
+    printf("\n\nEl vector de suma de dos vectores fracciones es: \n\n");
     for (int i=0; i<vector_size(v_frc_sum); i++) {
         fraction_print((fraction*)vector_get(v_frc_sum, i));
     }  //Este es el fragmento de suma de vectores
     //Ejercicio 5
 
     void *min_int = valor_min_or_max(v_int, compare_int, "min");
-    printf("\nEl valor minimo del vector de enteros es: %d\n", *(int*)min_int); //Valor mínimo del vector de enteros
+    printf("\n\nEl valor minimo del vector de enteros es: %d\n", *(int*)min_int); //Valor mínimo del vector de enteros
     void *max_int = valor_min_or_max(v_int, compare_int, "max");
-    printf("El valor maximo del vector de enteros es: %d\n", *(int*)max_int); //Valor máximo del vector de enteros
+    printf("\nEl valor maximo del vector de enteros es: %d\n", *(int*)max_int); //Valor máximo del vector de enteros
     //Ejercicio 6
 
     int val = 41;
@@ -55,7 +55,7 @@ int main ()
     //Ejercicio 9
 
     int pos = primera_aparicion(v_frc, vector_get(v_frc, 0), compare_frc);
-    printf("\nLa primera aparicion es en la posicion: %d\n\n", pos); //La aparicion del elemento elejido en el vector ordenado
+    printf("\n\nLa primera aparicion es en la posicion: %d\n\n", pos); //La aparicion del elemento elejido en el vector ordenado
     //Ejercicio 10
 
     vector *result2 = ordenar_vector_insertion(v_frc, compare_frc);
@@ -66,7 +66,7 @@ int main ()
     //Ejercicio 11
 
     vector_sort(v_int, compare_int); //ordena v_int en si mismo
-    printf("\nEl vector de enteros ordenado en si mismo es: \n\n");
+    printf("\n\nEl vector de enteros ordenado en si mismo es: \n\n");
     for (int i=0; i<vector_size(v_int); i++) {
         printf("%d ", *(int*)vector_get(v_int, i));
     } 
@@ -95,28 +95,33 @@ int main ()
     } //En este caso no se repiten las fracciones asi que el vector resultante es el mismo
     //Ejercicio 14
 
+    vector *mezcla_frc = elementos_mezclados(v_frc, v_frc_sum, compare_frc);
+    printf("\n\nEl vector mezcla de fracciones es: \n\n");
+    for (int i=0; i<vector_size(mezcla_frc); i++) {
+        fraction_print((fraction*)vector_get(mezcla_frc, i));
+    }
+    //Ejercicio 15
+
+    fraction *f1 = fraction_new(8, 8);
+    printf("\n\nLa fraccion ");
+    fraction_print(f1);
+    printf("Esta en la posicion %d\n\n", vector_binary_search(result2, f1, compare_frc));
+    //Ejercicio 16
 
     for(int i=0; i<vector_size(v_frc); i++) {
         fraction_destroy((fraction*)vector_get(v_frc, i));
     } //Libera cada fraccion del vector de fracciones
     vector_free(v_frc);
+
     for(int i=0; i<vector_size(v_frc_sum); i++) {
         fraction_destroy((fraction*)vector_get(v_frc_sum, i));
     } //Libera cada fraccion del vector de suma de fracciones
     vector_free(v_frc_sum);
-    for(int i=0; i<vector_size(result); i++) {
-        fraction_destroy((fraction*)vector_get(result, i));
-    } //Libera cada fraccion del vector ordenado por bubble
-    vector_free(result);
-    for(int i=0; i<vector_size(result2); i++) {
-        fraction_destroy((fraction*)vector_get(result2, i));
-    } //Libera cada fraccion del vector ordenado por insertion
-    vector_free(result2);
-    for(int i=0; i<vector_size(no_repetidos); i++) {
-        fraction_destroy((fraction*)vector_get(no_repetidos, i));
-    } //Libera cada fraccion del vector sin elementos repetidos
-    vector_free(no_repetidos); 
 
+    vector_free(result);
+    vector_free(result2);
+    vector_free(no_repetidos);
+    vector_free(mezcla_frc);
     vector_free(v_int); //Liberar memoria
     return 0;
 }
@@ -327,5 +332,14 @@ vector *eliminar_repetidos(vector *v, int (*cmp)(void *, void *)) //Ejercicio 14
 
 vector *elementos_mezclados(vector *v1, vector *v2, int (*cmp)(void *,void *)) //Ejercicio 15
 {
-
+    vector *result = vector_new_with(vector_size(v1)+vector_size(v2));
+    for(int i=0; i<vector_size(v1); i++) {
+        vector_add(result, vector_get(v1, i));
+    }
+    for(int i=0; i<vector_size(v2); i++) {
+        vector_add(result, vector_get(v2, i));
+    }
+    vector *r = eliminar_repetidos(result, cmp);
+    vector_free(result);
+    return r;
 }
