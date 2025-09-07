@@ -12,6 +12,7 @@ int valor_max_1rec(vector *v, int (*cmp)(void*, void*));
 vector *ordenar_vector_bubble(vector *v, int (*ord)(void *, void *));
 int primera_aparicion(vector *v, void *val, int (*cmp)(void *, void *));
 vector *ordenar_vector_insertion(vector *v, int (*ord)(void *, void *));
+vector *eliminar_repetidos(vector *v, int (*cmp)(void *, void *));
 
 void *suma_frc(void *a, void *b);
 int compare_int(void *a, void *b);

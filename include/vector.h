@@ -8,7 +8,7 @@ typedef struct vector vector;
 
 VECTOR_API vector* vector_new(); // Crea el vector
 VECTOR_API vector* vector_new_with(int ini_size); // Crea el vector con tamaño inicial
-VECTOR_API void vector_free(vector* v); // Eliminar el vector
+VECTOR_API void vector_free(vector* v); // Libera v.data y a v, no libera el contenido de cada v.data[i]
 VECTOR_API int vector_size(vector* v); // Obtener el tamaño actual
 VECTOR_API int vector_isfull(vector* v); // Devuelve 0 si no está lleno
 VECTOR_API int vector_isempty(vector* v); // Devuelve 0 si no está vacío

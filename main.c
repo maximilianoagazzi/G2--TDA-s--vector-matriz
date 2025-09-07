@@ -88,11 +88,36 @@ int main ()
     }
     //Ejercicio 13
 
-    vector_free(result);
-    vector_free(result2);
+    vector *no_repetidos = eliminar_repetidos(v_frc, compare_frc);
+    printf("\nEl vector de fracciones sin repetidos es: \n\n");
+    for (int i=0; i<vector_size(no_repetidos); i++) {
+        fraction_print((fraction*)vector_get(no_repetidos, i));
+    } //En este caso no se repiten las fracciones asi que el vector resultante es el mismo
+    //Ejercicio 14
+
+
+    for(int i=0; i<vector_size(v_frc); i++) {
+        fraction_destroy((fraction*)vector_get(v_frc, i));
+    } //Libera cada fraccion del vector de fracciones
+    vector_free(v_frc);
+    for(int i=0; i<vector_size(v_frc_sum); i++) {
+        fraction_destroy((fraction*)vector_get(v_frc_sum, i));
+    } //Libera cada fraccion del vector de suma de fracciones
     vector_free(v_frc_sum);
-    vector_free(v_int);
-    vector_free(v_frc);  //Liberar memoria
+    for(int i=0; i<vector_size(result); i++) {
+        fraction_destroy((fraction*)vector_get(result, i));
+    } //Libera cada fraccion del vector ordenado por bubble
+    vector_free(result);
+    for(int i=0; i<vector_size(result2); i++) {
+        fraction_destroy((fraction*)vector_get(result2, i));
+    } //Libera cada fraccion del vector ordenado por insertion
+    vector_free(result2);
+    for(int i=0; i<vector_size(no_repetidos); i++) {
+        fraction_destroy((fraction*)vector_get(no_repetidos, i));
+    } //Libera cada fraccion del vector sin elementos repetidos
+    vector_free(no_repetidos); 
+
+    vector_free(v_int); //Liberar memoria
     return 0;
 }
 
@@ -281,3 +306,26 @@ vector *ordenar_vector_insertion(vector *v, int (*ord)(void *, void *)) //Ejerci
     return result;
 }
 
+vector *eliminar_repetidos(vector *v, int (*cmp)(void *, void *)) //Ejercicio 14
+{
+    vector *result = vector_new_with(vector_size(v));
+    for(int i=0; i<vector_size(v); i++) {
+        void *aux = vector_get(v, i);
+        int repetido = 0;
+        for(int j=0; j<vector_size(result); j++) {
+            if(cmp(vector_get(result, j), aux) == 0) {
+                repetido = 1;
+                break;
+            }
+        }
+        if(repetido == 0) {
+            vector_add(result, aux);
+        }
+    }
+    return result;
+}
+
+vector *elementos_mezclados(vector *v1, vector *v2, int (*cmp)(void *,void *)) //Ejercicio 15
+{
+
+}
